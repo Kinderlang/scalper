@@ -5,277 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prediksi Multibagger Saham Indonesia</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        header {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        h1 {
-            margin: 0;
-            font-size: 2.5rem;
-        }
-        .last-update {
-            font-style: italic;
-            margin-top: 0.5rem;
-        }
-        .card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .stock-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-        .stock-table th, .stock-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        .stock-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        .stock-table tr:hover {
-            background-color: #f5f5f5;
-        }
-        .positive {
-            color: #28a745;
-            font-weight: bold;
-        }
-        .negative {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .sector-analysis {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        .sector-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1rem;
-            flex: 1 1 200px;
-        }
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            font-size: 1.2rem;
-        }
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding: 1rem;
-            border-top: 1px solid #ddd;
-            color: #6c757d;
-        }
-        @media (max-width: 768px) {
-            .stock-table {
-                font-size: 0.8rem;
-            }
-            .stock-table th, .stock-table td {
-                padding: 8px 10px;
-            }
-        }
+        /* CSS Anda di sini */
     </style>
 </head>
 <body>
-    <header>
-        <h1>🔮 Prediksi Multibagger Saham Indonesia</h1>
-        <p>Analisis prediksi saham potensial untuk tanggal <span id="prediction-date"></span></p>
-        <p class="last-update">Terakhir update: <span id="last-update"></span></p>
-    </header>
-
-    <div class="card">
-        <h2>📈 Top 15 Prediksi Multibagger</h2>
-        <div id="predictions-loading" class="loading">Memuat data prediksi...</div>
-        <table class="stock-table" id="predictions-table" style="display: none;">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Symbol</th>
-                    <th>Harga</th>
-                    <th>Prediksi</th>
-                    <th>Potensi</th>
-                    <th>Confidence</th>
-                    <th>Score</th>
-                    <th>Sektor</th>
-                    <th>Trend</th>
-                </tr>
-            </thead>
-            <tbody id="predictions-body">
-                <!-- Data akan diisi oleh JavaScript -->
-            </tbody>
-        </table>
-    </div>
-
-    <div class="card">
-        <h2>📊 Analisis Sektoral</h2>
-        <div id="sector-loading" class="loading">Memuat analisis sektoral...</div>
-        <div id="sector-analysis" class="sector-analysis" style="display: none;">
-            <!-- Data akan diisi oleh JavaScript -->
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>🔍 Detail Top 5 Prediksi</h2>
-        <div id="details-loading" class="loading">Memuat detail prediksi...</div>
-        <div id="top-details">
-            <!-- Data akan diisi oleh JavaScript -->
-        </div>
-    </div>
-
-    <footer>
-        <p>Disclaimer: Prediksi ini bukan merupakan rekomendasi investasi. Lakukan penelitian sendiri sebelum investasi.</p>
-        <p>Data diupdate setiap hari setelah penutupan bursa untuk prediksi hari berikutnya.</p>
-    </footer>
-
+    <!-- HTML Anda di sini -->
+    
     <script>
-        // Fungsi untuk memformat angka sebagai Rupiah
-        function formatRupiah(angka) {
-            return new Intl.NumberFormat('id-ID', { 
-                style: 'currency', 
-                currency: 'IDR',
-                minimumFractionDigits: 0 
-            }).format(angka);
-        }
-
-        // Fungsi untuk memuat data prediksi
+        // Ganti URL_API dengan URL Railway Anda
+        const URL_API = "https://your-project-name.up.railway.app";
+        
         async function loadPredictions() {
             try {
-                // Tanggal prediksi (besok)
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                const predictionDate = tomorrow.toISOString().split('T')[0];
-                document.getElementById('prediction-date').textContent = predictionDate;
-                
-                // Coba load data untuk tanggal besok
-                let response = await fetch(`https://your-api-domain.com/predictions/${predictionDate}`);
-                
-                // Jika data untuk besok belum ada, gunakan data hari ini
-                if (!response.ok) {
-                    const today = new Date().toISOString().split('T')[0];
-                    response = await fetch(`https://your-api-domain.com/predictions/${today}`);
-                }
-                
+                const response = await fetch(`${URL_API}/predictions`);
                 const data = await response.json();
                 
-                // Tampilkan data prediksi
+                // Tampilkan data di halaman
                 displayPredictions(data.predictions);
                 displaySectorAnalysis(data.sector_analysis);
                 displayTopDetails(data.top_details);
-                document.getElementById('last-update').textContent = new Date().toLocaleString('id-ID');
+                
+                document.getElementById('prediction-date').textContent = data.prediction_date;
+                document.getElementById('last-update').textContent = new Date(data.last_updated).toLocaleString('id-ID');
                 
             } catch (error) {
                 console.error('Error loading predictions:', error);
                 document.getElementById('predictions-loading').textContent = 'Gagal memuat data. Silakan coba lagi nanti.';
             }
         }
-
-        // Fungsi untuk menampilkan data prediksi
-        function displayPredictions(predictions) {
-            const tbody = document.getElementById('predictions-body');
-            tbody.innerHTML = '';
-            
-            predictions.forEach(stock => {
-                const row = document.createElement('tr');
-                
-                // Format kelas untuk nilai positif/negatif
-                const potentialClass = stock.Potential_Gain >= 0 ? 'positive' : 'negative';
-                
-                row.innerHTML = `
-                    <td>${stock.Rank}</td>
-                    <td><strong>${stock.Symbol}</strong></td>
-                    <td>${formatRupiah(stock.Current_Price)}</td>
-                    <td>${formatRupiah(stock.Predicted_Price)}</td>
-                    <td class="${potentialClass}">${stock.Potential_Gain.toFixed(1)}%</td>
-                    <td>${stock.Confidence.toFixed(1)}%</td>
-                    <td>${stock.Score}/10</td>
-                    <td>${stock.Sector}</td>
-                    <td>${stock.Trend}</td>
-                `;
-                
-                tbody.appendChild(row);
-            });
-            
-            // Sembunyikan loading, tampilkan tabel
-            document.getElementById('predictions-loading').style.display = 'none';
-            document.getElementById('predictions-table').style.display = 'table';
-        }
-
-        // Fungsi untuk menampilkan analisis sektoral
-        function displaySectorAnalysis(sectors) {
-            const container = document.getElementById('sector-analysis');
-            container.innerHTML = '';
-            
-            for (const [sector, data] of Object.entries(sectors)) {
-                const sectorCard = document.createElement('div');
-                sectorCard.className = 'sector-card';
-                
-                sectorCard.innerHTML = `
-                    <h3>${sector}</h3>
-                    <p><strong>${data.count} saham</strong></p>
-                    <p>Rata-rata potensi: <span class="${data.avg_gain >= 0 ? 'positive' : 'negative'}">${data.avg_gain.toFixed(1)}%</span></p>
-                    <p>${data.stocks.slice(0, 3).join(', ')}${data.stocks.length > 3 ? '...' : ''}</p>
-                `;
-                
-                container.appendChild(sectorCard);
-            }
-            
-            // Sembunyikan loading, tampilkan analisis
-            document.getElementById('sector-loading').style.display = 'none';
-            document.getElementById('sector-analysis').style.display = 'flex';
-        }
-
-        // Fungsi untuk menampilkan detail top 5
-        function displayTopDetails(details) {
-            const container = document.getElementById('top-details');
-            container.innerHTML = '';
-            
-            details.forEach((stock, index) => {
-                const detailCard = document.createElement('div');
-                detailCard.className = 'card';
-                detailCard.style.marginTop = '1rem';
-                
-                detailCard.innerHTML = `
-                    <h3>${index + 1}. ${stock.Symbol} - REKOMENDASI</h3>
-                    <p>💡 ${stock.Recommendation}</p>
-                    <p>📊 Confidence: ${stock.Confidence.toFixed(1)}%</p>
-                    <p>📈 Current: ${formatRupiah(stock.Current_Price)}</p>
-                    <p>🎯 Prediksi: ${formatRupiah(stock.Predicted_Price)}</p>
-                    <p>🚀 Potensi Gain: <span class="${stock.Potential_Gain >= 0 ? 'positive' : 'negative'}">${stock.Potential_Gain.toFixed(1)}%</span></p>
-                    <p>⚡ Entry: ${formatRupiah(stock.Entry_Price)}</p>
-                    <p>⚠️ Stop Loss: ${formatRupiah(stock.Stop_Loss)}</p>
-                    <p>📊 Risk/Reward: 1:${stock.Risk_Reward.toFixed(2)}</p>
-                `;
-                
-                container.appendChild(detailCard);
-            });
-            
-            // Sembunyikan loading
-            document.getElementById('details-loading').style.display = 'none';
-        }
-
-        // Muat data saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', loadPredictions);
+        
+        // Fungsi lainnya tetap sama
     </script>
 </body>
 </html>
