@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import yfinance as yf
 from datetime import datetime, timedelta
+import os
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -11,8 +12,25 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 class MultibaggerPredictor:
-    # ... (sama dengan class yang sudah Anda miliki sebelumnya) ...
-    
+    def __init__(self):
+        self.target_stocks = [
+            'BMBL.JK', 'GIAA.JK', 'GMFI.JK', 'HADE.JK',
+            'HRTA.JK', 'IRSX.JK', 'BUMI.JK', 'TINS.JK',
+            'BYAN.JK', 'DOID.JK', 'ELSA.JK', 'IMAS.JK',
+            'KAEF.JK', 'LPPF.JK', 'MAPI.JK', 'IOTF.JK',
+            'PBSA.JK', 'SMSM.JK', 'TARA.JK', 'WIKA.JK',
+            'WINS.JK', 'YULE.JK', 'ZBRA.JK', 'ACES.JK',
+            'AGRS.JK', 'AKSI.JK', 'APIC.JK', 'ASGR.JK',
+            'BSBK.JK', 'KBLV.JK', 'MPXL.JK', 'MLPL.JK',
+            'PTRO.JK', 'GZCO.JK', 'TPIA.JK', 'CUAN.JK',
+            'CDIA.JK', 'BRMS.JK', 'GOTO.JK', 'HRTA.JK'
+        ]
+        
+        # Tanggal prediksi (besok)
+        self.prediction_date = datetime.now() + timedelta(days=1)
+
+    # ... (semua method Anda yang lain tetap sama) ...
+
     def run_analysis(self):
         """Jalankan analisis dan return hasilnya"""
         results = self.analyze_stocks()
@@ -49,6 +67,7 @@ class MultibaggerPredictor:
             })
         
         return {
+            'prediction_date': self.prediction_date.strftime('%Y-%m-%d'),
             'predictions': predictions,
             'sector_analysis': sector_analysis,
             'top_details': top_details,
@@ -58,19 +77,22 @@ class MultibaggerPredictor:
 # Buat instance predictor
 predictor = MultibaggerPredictor()
 
-@app.route('/predictions/<date>')
-def get_predictions(date):
+@app.route('/')
+def home():
+    return "Multibagger Prediction API - Gunakan endpoint /predictions"
+
+@app.route('/predictions')
+def get_predictions():
     try:
-        # Jika tanggal yang diminta adalah besok, kita perlu menghitung prediksi
-        # Untuk simplicity, kita akan selalu mengembalikan prediksi terbaru
         results = predictor.run_analysis()
         return jsonify(results)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/')
-def home():
-    return "Multibagger Prediction API - Gunakan endpoint /predictions/YYYY-MM-DD"
+@app.route('/health')
+def health_check():
+    return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
